@@ -88,6 +88,14 @@ public class JwtTokenServices {
             authorities.add(new SimpleGrantedAuthority(role));
         }
         return new UsernamePasswordAuthenticationToken(username, "", authorities);
+
+        // Fix would be here:
+        // https://stackoverflow.com/questions/54279755/getprincipal-method-returning-username-instead-of-userdetails
+        // The first constructor argument is being set to Principle object.
+        // So fix was to pass the whole userDetails object
+        // return new UsernamePasswordAuthenticationToken(userDetails, .....);
+
+
     }
 
 }
