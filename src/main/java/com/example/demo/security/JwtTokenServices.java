@@ -1,8 +1,11 @@
 package com.example.demo.security;
 
 
+import com.example.demo.model.VehicleAppUser;
+import com.example.demo.repository.UserRepository;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,14 +15,14 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Base64;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Component
 @Slf4j
 public class JwtTokenServices {
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Value("${security.jwt.token.secret-key:secret}")
     private String secretKey = "secret";
@@ -87,7 +90,11 @@ public class JwtTokenServices {
         for (String role : roles) {
             authorities.add(new SimpleGrantedAuthority(role));
         }
-        return new UsernamePasswordAuthenticationToken(username, "", authorities);
+
+        VehicleAppUser userObject = userRepository.findByUsername(username).get();
+
+        // return new UsernamePasswordAuthenticationToken(username, "", authorities);
+        return new UsernamePasswordAuthenticationToken(userObject, "", authorities);
 
         // Fix would be here:
         // https://stackoverflow.com/questions/54279755/getprincipal-method-returning-username-instead-of-userdetails
