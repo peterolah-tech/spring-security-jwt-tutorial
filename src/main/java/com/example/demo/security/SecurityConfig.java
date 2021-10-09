@@ -33,6 +33,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/auth/signin").permitAll() // allowed by anyone
                 .antMatchers(HttpMethod.GET, "/vehicles/**").authenticated() // allowed only when signed in
+                .antMatchers(HttpMethod.GET, "/me").authenticated() // allowed only when signed in
+                .antMatchers(HttpMethod.GET, "/username").authenticated() // allowed only when signed in
                 .antMatchers(HttpMethod.DELETE, "/vehicles/**").hasRole("ADMIN") // allowed if signed in with ADMIN role
                 .anyRequest().denyAll() // anything else is denied
                 .and()
